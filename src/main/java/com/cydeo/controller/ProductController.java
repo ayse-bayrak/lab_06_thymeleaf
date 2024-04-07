@@ -1,6 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.model.Product;
+import com.cydeo.service.CartService;
 import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,11 @@ import java.util.UUID;
 public class ProductController {
 
 private final ProductService productService;
+private final CartService cartService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CartService cartService) {
         this.productService = productService;
+        this.cartService = cartService;
     }
 
     @RequestMapping("/list") //localhost:8080/list
@@ -37,6 +40,9 @@ private final ProductService productService;
     public String newProduct(@ModelAttribute("product") Product product, Model model){
         product.setId(UUID.randomUUID());
         productService.productCreate(product);
+        cartService.addToCart(product.getId(), 1); // add to cart
         return "redirect:create-form";
     }
+
+
 }

@@ -29,19 +29,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="product:${products}" th:value="${product}" > <!-- todo productList-->
-                        <td th:text="${product.name}" ></td><!-- todo product variables-->
-                        <td th:text="${product.price}"></td><!-- todo product variables-->
-                        <td th:text="${product.remainingQuantity}"></td><!-- todo product variables-->
+                    <tr th:each="product:${products}" th:value="${product}" > <!--I added  todo productList-->
+                        <td th:text="${product.name}" ></td><!--I added  todo product variables-->
+                        <td th:text="${product.price}"></td><!--I added  todo product variables-->
+                        <td th:text="${product.remainingQuantity}"></td><!--I added  todo product variables-->
                         <td>
-                            <a class="btn btn-primary">Add Cart<i></i></a> <!-- todo a href with two path variables-->
+                            <a class="btn btn-primary">Add Cart<i></i></a> <!--I added  todo a href with two path variables-->
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-            <p class="my-5"><a class="btn btn-primary">Create Product<i
+            <p class="my-5"><a class="btn btn-primary" th:href="@{/create-form}">Create Product<i
                     class="fas fa-user-plus ml-2"></i></a></p> <!-- todo create product form page url-->
             <p class="my-5"><a class="btn btn-primary">See Cart<i class="fas fa-user-plus ml-2"></i></a> <!-- todo cart url-->
             </p>

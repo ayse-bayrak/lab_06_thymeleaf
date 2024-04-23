@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -25,25 +26,28 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart addToCart(UUID productId, Integer quantity) {
-        Product product1= productService.findProductById(productId);
-        CartItem cartItem = new CartItem();
-        cartItem.setProduct(product1);
-        BigDecimal cartTotalAmount = product1.getPrice().multiply(BigDecimal.valueOf(product1.getRemainingQuantity()).multiply(BigDecimal.valueOf(quantity)));
-        CART.setCartTotalAmount(cartTotalAmount);
-        List<CartItem> cartItemList = new ArrayList<>();
-        cartItemList.add(cartItem);
-        CART.setCartItemList(cartItemList);
         //todo find product based on productId
+        Product product= productService.findProductById(productId);
         //todo initialise cart item using the found product
+        CartItem cartItem = new CartItem();
+        cartItem.setProduct(product);
+        cartItem.setQuantity(quantity);
+        cartItem.setTotalAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
         //todo calculate cart total amount
+        CART.setCartTotalAmount(CART.getCartTotalAmount().add(cartItem.getTotalAmount()));
         //todo add to cart
+        CART.getCartItemList().add(cartItem);
         return CART;
     }
 
     @Override
     public boolean deleteFromCart(UUID productId) {
-        Product product = productService.findProductById(productId);
-        return CART.getCartItemList().remove(product);
+         CartItem cartItem = CART.getCartItemList()
+                .stream()
+                .filter(p-> p.getProduct().getId().equals(productId)).findAny().orElseThrow();
+       CART.setCartTotalAmount(CART.getCartTotalAmount().subtract(cartItem.getTotalAmount()));
+
+        return CART.getCartItemList().remove(cartItem);
         //todo delete product object from cart using stream
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
 
@@ -23,9 +22,9 @@ private final CartService cartService;
         this.cartService = cartService;
     }
 
-    @RequestMapping("/list") //localhost:8080/list
+    @GetMapping("/list") //localhost:8080/list
     public String listProduct(Model model){
-        model.addAttribute("products",productService.listProducts());
+        model.addAttribute("productList",productService.listProducts());
         return "product/list";
     }
     //No Product Yet-Create Product-See Cart
@@ -36,13 +35,12 @@ private final CartService cartService;
         return "/product/create-product";
     } // empty new product screen
 
-    @PostMapping("/create-form") //localhost:8080/create-form
+    @PostMapping("/create-product") //localhost:8080/create-form
     public String newProduct(@ModelAttribute("product") Product product, Model model){
-        product.setId(UUID.randomUUID());
+        //we don't need to @ModelAttribute("product") and also we don't need to same object name (it does not have to product ==> It is able to find it based on the matching data type
         productService.productCreate(product);
-        cartService.addToCart(product.getId(), 1); // add to cart
-        return "redirect:create-form";
+        cartService.addToCart(product.getId(), product.getRemainingQuantity()); // add to cart
+        return "redirect:/list";
     }
-
 
 }

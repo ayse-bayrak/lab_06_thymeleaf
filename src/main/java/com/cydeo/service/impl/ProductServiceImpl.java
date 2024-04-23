@@ -21,7 +21,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean productCreate(Product product) {
-        return listProducts().add(product); // I added
+        product.setId(UUID.randomUUID());
+        return productRepository.save(product); // I added
     }
 
     @Override
@@ -31,8 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findProductById(UUID uuid) {
-       return listProducts().stream().filter(product -> product.getId().
-                toString().equals(uuid.toString())).findFirst().orElseThrow();// I added
+       return productRepository.findProductById(uuid);// I added
     }
 
 }
